@@ -1,4 +1,5 @@
 <?php
+//update
 require_once('assets/init.php');
 $f = '';
 $s = '';
