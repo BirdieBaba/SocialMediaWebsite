@@ -1,13 +1,5 @@
 <?php
-// +------------------------------------------------------------------------+
-// | @author Deen Doughouz (DoughouzForest)
-// | @author_url 1: http://www.wowonder.com
-// | @author_url 2: http://codecanyon.net/user/doughouzforest
-// | @author_email: wowondersocial@gmail.com   
-// +------------------------------------------------------------------------+
-// | WoWonder - The Ultimate PHP Social Networking Platform
-// | Copyright (c) 2017 WoWonder. All rights reserved.
-// +------------------------------------------------------------------------+
+//up
 @header('Location: install');
 exit();
 // MySQL Hostname
