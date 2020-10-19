@@ -1,6 +1,6 @@
 -- phpMyAdmin SQL Dump
 -- version 5.0.1
--- https://www.phpmyadmin.net/
+-- https://www.phpmyadmin.net/update
 --
 -- Host: 127.0.0.1
 -- Generation Time: May 23, 2020 at 03:13 PM
