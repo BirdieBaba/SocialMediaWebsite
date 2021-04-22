@@ -34,17 +34,6 @@ if (!empty($_POST['install'])) {
    }
    if (empty($ServerErrors)) {
       $file_content = 
-'<?php
-// +------------------------------------------------------------------------+
-// | @author Deen Doughouz (DoughouzForest)
-// | @author_url 1: http://www.wowonder.com
-// | @author_url 2: http://codecanyon.net/user/doughouzforest
-// | @author_email: wowondersocial@gmail.com   
-// +------------------------------------------------------------------------+
-// | WoWonder - The Ultimate PHP Social Networking Platform
-// | Copyright (c) 2016 WoWonder. All rights reserved.
-// +------------------------------------------------------------------------+
-// MySQL Hostname
 $sql_db_host = "'  . $_POST['sql_host'] . '";
 // MySQL Database User
 $sql_db_user = "'  . $_POST['sql_user'] . '";
@@ -55,9 +44,6 @@ $sql_db_name = "'  . $_POST['sql_name'] . '";
 
 // Site URL
 $site_url = "' . $_POST['site_url'] . '"; // e.g (http://example.com)
-
-// Purchase code
-$purchase_code = "' . trim($_POST['purshase_code']) . '"; // Your purchase code, don\'t give it to anyone. 
 ?>';
 $success = '';
 $config_file = file_put_contents($config_file_name, $file_content);
@@ -65,17 +51,15 @@ if (file_exists('../htaccess.txt')) {
   $htaccess = @file_put_contents('../.htaccess', file_get_contents('../htaccess.txt'));
 }
     if ($config_file) {
-        $filename = '../wowonder.sql';
+        $filename = '../$sqlFile + .sql';
         // Temporary variable, used to store current query
         $templine = '';
         // Read in entire file
         $lines = file($filename);
         // Loop through each line
         foreach ($lines as $line) {
-           // Skip it if it's a comment
            if (substr($line, 0, 2) == '--' || $line == '')
               continue;
-           // Add this line to the current segment
            $templine .= $line;
            $query = false;
            // If it has a semicolon at the end, it's the end of the query
@@ -97,21 +81,21 @@ if (file_exists('../htaccess.txt')) {
               $query_one = mysqli_query($con1, "DROP TABLE Wo_Users");
               $ServerErrors[] = "Error found while installing, please contact us.";
            }
-           $query_one = mysqli_query($con1, "UPDATE `Wo_Config` SET `value` = '" . mysqli_real_escape_string($con1, md5(microtime())). "' WHERE `name` = 'widnows_app_api_id'");
-           $query_one = mysqli_query($con1, "UPDATE `Wo_Config` SET `value` = '" . mysqli_real_escape_string($con1, md5(time())). "' WHERE `name` = 'widnows_app_api_key'");
-           $query_one  = mysqli_query($con1, "UPDATE `Wo_Config` SET `value` = '" . mysqli_real_escape_string($con1, $_POST['siteName']). "' WHERE `name` = 'siteName'");
-           $query_one .= mysqli_query($con1, "UPDATE `Wo_Config` SET `value` = '" . mysqli_real_escape_string($con1, $_POST['siteTitle']). "' WHERE `name` = 'siteTitle'");
-           $query_one .= mysqli_query($con1, "UPDATE `Wo_Config` SET `value` = '" . mysqli_real_escape_string($con1, $_POST['siteEmail']). "' WHERE `name` = 'siteEmail'");
+           $query_one = mysqli_query($con1, "UPDATE `mn_config` SET `value` = '" . mysqli_real_escape_string($con1, md5(microtime())). "' WHERE `name` = 'widnows_app_api_id'");
+           $query_one = mysqli_query($con1, "UPDATE `mn_config` SET `value` = '" . mysqli_real_escape_string($con1, md5(time())). "' WHERE `name` = 'widnows_app_api_key'");
+           $query_one  = mysqli_query($con1, "UPDATE `mn_config` SET `value` = '" . mysqli_real_escape_string($con1, $_POST['siteName']). "' WHERE `name` = 'siteName'");
+           $query_one .= mysqli_query($con1, "UPDATE `mn_config` SET `value` = '" . mysqli_real_escape_string($con1, $_POST['siteTitle']). "' WHERE `name` = 'siteTitle'");
+           $query_one .= mysqli_query($con1, "UPDATE `mn_config` SET `value` = '" . mysqli_real_escape_string($con1, $_POST['siteEmail']). "' WHERE `name` = 'siteEmail'");
            
 
-           $query_onde = mysqli_query($con1, "INSERT INTO `Wo_Users` (
+           $query_onde = mysqli_query($con1, "INSERT INTO `mn_users` (
             `username`,`password`, `email`, `admin`, `active`, `verified`, `registered`, `start_up`, `start_up_info`, `startup_follow`, `startup_image`, `joined`)
             VALUES ('" . mysqli_real_escape_string($con1, $_POST['admin_username']). "', '" . mysqli_real_escape_string($con1, sha1($_POST['admin_password'])) . "','" . mysqli_real_escape_string($con1, $_POST['siteEmail']) . "'
                 ,'1', '1', '1', '00/0000', '1', '1', '1', '1', '" . time() . "')");
            //$_SESSION['user_id'] = Wo_CreateLoginSession(1);
            if (function_exists('apache_get_modules')) {
              if (!in_array('mod_rewrite', apache_get_modules())) {
-                $query_one .= mysqli_query($con1, "UPDATE `Wo_Config` SET `value` = '" . mysqli_real_escape_string($con, 0). "' WHERE `name` = 'seoLink'");
+                $query_one .= mysqli_query($con1, "UPDATE `mn_config` SET `value` = '" . mysqli_real_escape_string($con, 0). "' WHERE `name` = 'seoLink'");
              }
            }
             // chmod general config file
@@ -121,9 +105,10 @@ if (file_exists('../htaccess.txt')) {
             //chmod upload folder
             @chmod("./upload", 0777);
 
-           $success = 'WoWonder successfully installed, please wait ..';
+           $success = 'gud';
         } else {
-          $ServerErrors[] = "Error found while installing, please contact us.";
+          $reInstall[] = (.$host + .$installDir).$add("/");
+             exit;
         }
       }
    }
@@ -134,10 +119,10 @@ if (file_exists('../htaccess.txt')) {
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <title>WoWonder | Installation</title>
-        <link rel="shortcut icon" type="image/png" href="../themes/wowonder/img/icon.png"/>
-        <link rel="stylesheet" href="../themes/wowonder/stylesheet/general-style-plugins.css">
+        <link rel="shortcut icon" type="image/png" href="../themes//img/icon.png"/>
+        <link rel="stylesheet" href="../themes//stylesheet/general-style-plugins.css">
         <link rel="stylesheet" href="style.css">
-        <script type="text/javascript" src="../themes/wowonder/javascript/jquery-3.1.1.min.js"></script>
+        <script type="text/javascript" src="../themes//javascript/jquery-3.1.1.min.js"></script>
     </head>
 
         <?php 
@@ -250,16 +235,10 @@ if (file_exists('../htaccess.txt')) {
                             <div class="setting-well">
                                 <?php if ($page == 'terms') { ?>
                                 <div class="terms">
-                                    <h5>LICENSE AGREEMENT: one (1) Domain (site) Install</h5>
-                                    <br>
-                                    <b class="bold">You CAN:</b><br> 1) Use on one (1) domain only, additional license purchase required for each additional domain.<br> 2) Modify or edit as you see fit.<br> 3) Delete sections as you see fit.<br> 4) Translate to your choice of language.<br>
-                                    <br><b class="bold">You CANNOT:</b> <br>1) Resell, distribute, give away or trade by any means to any third party or individual without permission.<br> 2) Use on more than one (1) domain.
-                                    <br><br>Unlimited Licenses are available.
-                                    <hr>
+                                   
                                     <form action="?page=req" method="post">
                     <div class="wo_terms">
                       <input type="checkbox" name="agree" id="agree">
-                      <label for="agree"> I agree to the terms of use and privacy policy</label>
                     </div>
                     <br><br>
                     <button type="submit" class="btn btn-main" id="next-terms" disabled>Continue <svg viewBox="0 0 19 14" xmlns="http://www.w3.org/2000/svg" width="18" height="18"><path fill="currentColor" d="M18.6 6.9v-.5l-6-6c-.3-.3-.9-.3-1.2 0-.3.3-.3.9 0 1.2l5 5H1c-.5 0-.9.4-.9.9s.4.8.9.8h14.4l-4 4.1c-.3.3-.3.9 0 1.2.2.2.4.2.6.2.2 0 .4-.1.6-.2l5.2-5.2h.2c.5 0 .8-.4.8-.8 0-.3 0-.5-.2-.7z"></path></svg></button>
@@ -368,8 +347,7 @@ if (file_exists('../htaccess.txt')) {
                                         <div class="form-group">
                                             <div class="col-md-2"></div>
                                             <div class="col-md-8">
-                                                <input type="text" class="form-control" name="purshase_code" value="<?php echo (!empty($_POST['purshase_code'])) ? trim($_POST['purshase_code']) : '';?>" placeholder="Purchase code" autofocus>
-                                                <span class="help-block">Enter anything here, it's a nulled! via <a target="_blank" href="https://bit.ly/2QCCRlD">FREE SCRIPT'S</a>.</span>
+                                                
                                             </div>
                       <div class="col-md-2"></div>
                                         </div>
